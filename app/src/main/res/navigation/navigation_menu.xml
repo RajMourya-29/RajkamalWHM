@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_menu"
+    app:startDestination="@id/mainMenu">
+
+    <fragment
+        android:id="@+id/mainMenu"
+        android:name="com.example.rajkamalwhm.MainMenu"
+        android:label="Rajkamal WHM"
+        tools:layout="@layout/fragment_main_menu">
+        <action
+            android:id="@+id/action_mainMenu_to_GRNEntryFragment"
+            app:destination="@id/GRNEntryFragment" />
+        <action
+            android:id="@+id/action_mainMenu_to_salesOrderFragment"
+            app:destination="@id/salesOrderFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/GRNEntryFragment"
+        android:name="com.example.rajkamalwhm.grnentry.GRNEntryFragment"
+        android:label="GRN Entry"
+        tools:layout="@layout/fragment_g_r_n_entry" >
+        <action
+            android:id="@+id/action_GRNEntryFragment_to_GRNEntrySaveFragment"
+            app:destination="@id/GRNEntrySaveFragment" />
+    </fragment>
+    <activity
+        android:id="@+id/loginPage"
+        android:name="com.example.rajkamalwhm.LoginPage"
+        android:label="activity_login_page"
+        tools:layout="@layout/activity_login_page" />
+    <fragment
+        android:id="@+id/salesOrderFragment"
+        android:name="com.example.rajkamalwhm.salesorderentry.SalesOrderFragment"
+        android:label="Sales Order"
+        tools:layout="@layout/fragment_sales_order" />
+    <fragment
+        android:id="@+id/GRNEntrySaveFragment"
+        android:name="com.example.rajkamalwhm.grnentry.GRNEntrySaveFragment"
+        android:label="GRN Entry"
+        tools:layout="@layout/fragment_g_r_n_entry_save" />
+</navigation>
