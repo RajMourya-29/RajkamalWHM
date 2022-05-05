@@ -10,7 +10,7 @@ import dmax.dialog.SpotsDialog;
 
 public class Global {
 
-    public static String BASE_URL="http://192.168.0.171/RajkamalWHM/WebService1.asmx/";
+    public static String BASE_URL="http://192.168.0.175/RajkamalWHM/WebService1.asmx/";
 
     public static void showtoast(Context context,String message){
 

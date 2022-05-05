@@ -53,14 +53,11 @@ public class GRNEntrySaveFragment extends Fragment {
     List itemcode;
 
     LinearLayout linear;
-    RecyclerView recyclerView;
     long tstamp;
     Button save;
 
     List<GrNo> grno;
     List serialnolist;
-    ArrayList<GRNPojo> grnPojoArrayList;
-    GRNAdapter grnAdapter;
 
     List<LastGrnoDetail> lastgrnolist;
 
@@ -84,7 +81,6 @@ public class GRNEntrySaveFragment extends Fragment {
         lotno = view.findViewById(R.id.lotno);
         qty = view.findViewById(R.id.qty);
         linear = view.findViewById(R.id.linear);
-        recyclerView = view.findViewById(R.id.rec);
         save = view.findViewById(R.id.save);
         desc = view.findViewById(R.id.desc);
 
@@ -97,10 +93,6 @@ public class GRNEntrySaveFragment extends Fragment {
 
         lastgrnolist = new ArrayList<>();
         grno = new ArrayList<>();
-        grnPojoArrayList = new ArrayList<>();
-        grnAdapter=new GRNAdapter(grnPojoArrayList,getContext());
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(grnAdapter);
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(Global.BASE_URL)
@@ -111,7 +103,7 @@ public class GRNEntrySaveFragment extends Fragment {
         executor.execute(() -> {
             loadpono();
             loadallgrno();
-            handler.post(() ->  spotsDialog.dismiss());
+          //  handler.post(() ->  spotsDialog.dismiss());
         });
 
 
@@ -166,30 +158,8 @@ public class GRNEntrySaveFragment extends Fragment {
                     } else if((Integer.parseInt(qty.getText().toString())) == 0){
                         Global.showsnackbar(getActivity(),"Quantity Cannot Be 0");
                     } else {
-
-                        Calendar calendar = Calendar.getInstance();
-                        tstamp = calendar.getTimeInMillis();
-
-                        String getserialno = serialno.getText().toString();
-                        String getlotno = lotno.getText().toString();
-                        String getqty = qty.getText().toString();
-                        String getuniquecode = String.valueOf(tstamp);
-
-                        if(requiredqty.equals("1")){
-                            grnPojoArrayList.add(new GRNPojo(scancode.getText().toString(),getserialno,getlotno,"1","1",getuniquecode));
-                        }else {
-                            for (int i=0;i<Integer.parseInt(qty.getText().toString());i++){
-                                grnPojoArrayList.add(new GRNPojo(scancode.getText().toString(),getserialno,getlotno,"1","1",getuniquecode));
-                            }
-                        }
-
-                        try {
-                            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
-                        } catch (Exception e) {
-                        }
-
-                        grnAdapter.notifyDataSetChanged();
+//                        Calendar calendar = Calendar.getInstance();
+//                        tstamp = calendar.getTimeInMillis();
 
                     }
                     return true;
@@ -202,15 +172,13 @@ public class GRNEntrySaveFragment extends Fragment {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(grnPojoArrayList.size()==0){
-                    Global.showsnackbar(getActivity(),"No Data To Save");
-                }else {
                     spotsDialog = Global.showdailog(getContext());
                     executor.execute(() -> {
                         savegrndata();
-                        handler.post(() ->  spotsDialog.dismiss());
+//                        handler.post(() ->
+//                                spotsDialog.dismiss()
+//                        );
                     });
-                }
             }
         });
 
@@ -258,6 +226,7 @@ public class GRNEntrySaveFragment extends Fragment {
 
                 }else {
                     Global.showtoast(getContext(),"No Data");
+                    spotsDialog.cancel();
                 }
             }
 
@@ -324,6 +293,7 @@ public class GRNEntrySaveFragment extends Fragment {
 
                 }else {
                     Global.showtoast(getContext(),"No Data");
+                    spotsDialog.cancel();
                 }
             }
 
@@ -346,10 +316,10 @@ public class GRNEntrySaveFragment extends Fragment {
                 if(response.isSuccessful()) {
                     Response checkResponse = response.body();
                     requiredqty.setText(checkResponse.getResponse());
-
+                    spotsDialog.cancel();
                 }else {
                     Global.showtoast(getContext(),"something went wrong");
-                    //  spotsDialog.cancel();
+                      spotsDialog.cancel();
                 }
             }
 
@@ -442,11 +412,23 @@ public class GRNEntrySaveFragment extends Fragment {
 
                     if (checkResponse.getResponse().equals("data saved suceessfully")) {
                         loadlastgrno();
+//                        lastgrnolist = checkResponse.getLastGrnoDetails();
+//
+//                        getgrnid=lastgrnolist.get(0).getGrnId();
+//                        getgrnno=lastgrnolist.get(0).getGrnNo();
+//                        getitemname=lastgrnolist.get(0).getItemName();
+//                        getitemdesc=lastgrnolist.get(0).getItemDesc();
+//
+//                        for (int i=0;i<Integer.parseInt(qty.getText().toString());i++){
+//                            savegrndetails();
+//                        }
+
+
 //                        Global.showtoast(getContext(),"data saved suceessfully");
                     }
                 }else {
                     Global.showtoast(getContext(),"something went wrong");
-//                    spotsDialog.cancel();
+                    spotsDialog.cancel();
                 }
             }
 
@@ -478,7 +460,7 @@ public class GRNEntrySaveFragment extends Fragment {
                     Response checkResponse = response.body();
 
                     if (checkResponse.getResponse().equals("data saved suceessfully")) {
-                   //     spotsDialog.cancel();
+                        spotsDialog.cancel();
                         Global.showtoast(getContext(),"data saved suceessfully");
 
                         scancode.setText("");
@@ -488,10 +470,6 @@ public class GRNEntrySaveFragment extends Fragment {
                         desc.setText("");
 
                         linear.setVisibility(View.GONE);
-
-                        serialnolist.clear();
-                        grnAdapter.notifyDataSetChanged();
-
                         loadpono();
 
                         scancode.post(new Runnable() {
@@ -504,7 +482,7 @@ public class GRNEntrySaveFragment extends Fragment {
                     }
                 }else {
                     Global.showtoast(getContext(),"something went wrong");
-              //      spotsDialog.cancel();
+                    spotsDialog.cancel();
                 }
             }
 
